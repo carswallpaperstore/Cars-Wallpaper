@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  <url>
+    <loc>https://your-website-url.com/</loc>
+    <lastmod>2023-07-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://zdvvqjwqiyndrabtnbec.supabase.co/storage/v1/object/public/car-wallpapers/Supercars/Ferrari%20488%20Pista.png</image:loc>
+      <image:title>Ferrari 488 Pista - Red Supercar</image:title>
+      <image:caption>Stunning Ferrari 488 Pista in vibrant red, showcasing Italian supercar engineering at its finest</image:caption>
+    </image:image>
+    <!-- Add more image entries for each wallpaper -->
+  </url>
+  <!-- Add category pages if you implement them -->
+</urlset>

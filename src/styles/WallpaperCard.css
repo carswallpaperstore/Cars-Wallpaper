@@ -1,0 +1,175 @@
+.wallpaper-card {
+  background-color: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.wallpaper-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.12);
+}
+
+.wallpaper-image-container {
+  position: relative;
+  width: 100%;
+  padding-top: 65%; /* Slightly taller aspect ratio */
+  overflow: hidden;
+  background-color: #f0f0f0;
+}
+
+.wallpaper-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease, opacity 0.3s ease;
+}
+
+.wallpaper-image.loading {
+  opacity: 0;
+}
+
+.wallpaper-image.loaded {
+  opacity: 1;
+}
+
+.skeleton-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.wallpaper-card:hover .wallpaper-image {
+  transform: scale(1.05);
+}
+
+.wallpaper-details {
+  padding: 1.2rem;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.wallpaper-details h3 {
+  margin: 0 0 1rem 0;
+  font-size: 1.2rem;
+  color: #333;
+  font-weight: 600;
+  line-height: 1.3;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.card-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+}
+
+.category-tag {
+  font-size: 0.8rem;
+  padding: 0.3rem 0.8rem;
+  background-color: #f0f0f0;
+  color: #666;
+  border-radius: 20px;
+  text-transform: capitalize;
+}
+
+.download-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1rem;
+  background-color: #1a1a1a;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.download-icon {
+  width: 1rem;
+  height: 1rem;
+  stroke: currentColor;
+}
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+}
+
+.download-button:hover {
+  background-color: #333;
+}
+
+@media (max-width: 768px) {
+  .wallpaper-details {
+    padding: 1rem;
+  }
+  
+  .wallpaper-details h3 {
+    font-size: 1rem;
+    margin-bottom: 0.8rem;
+  }
+  
+  .download-button {
+    padding: 0.6rem 0.8rem;
+    font-size: 0.9rem;
+  }
+  
+  .category-tag {
+    font-size: 0.7rem;
+    padding: 0.2rem 0.6rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .wallpaper-image-container {
+    padding-top: 70%;
+  }
+  
+  .wallpaper-details {
+    padding: 0.8rem;
+  }
+  
+  .wallpaper-details h3 {
+    font-size: 0.9rem;
+    margin-bottom: 0.6rem;
+  }
+  
+  .download-button {
+    padding: 0.5rem 0.7rem;
+    font-size: 0.8rem;
+    border-radius: 6px;
+  }
+  
+  .download-icon {
+    width: 0.8rem;
+    height: 0.8rem;
+  }
+  
+  .card-actions {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+}
