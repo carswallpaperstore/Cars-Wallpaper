@@ -1,20 +1,46 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Skeleton from 'react-loading-skeleton';
 import { saveAs } from 'file-saver';
 import '../styles/WallpaperCard.css';
 
-const WallpaperCard = ({ wallpaper, onImageLoad, isLoaded }) => {
+const WallpaperCard = ({ wallpaper, onImageLoad, isLoaded, isPriority = false }) => {
   const [imageLoading, setImageLoading] = useState(true);
+  const imageRef = useRef(null);
+  const hasLoadedRef = useRef(false); // Track if this image has ever been loaded
+  
+  // Preload image and cache it
+  useEffect(() => {
+    // Skip if already loaded
+    if (hasLoadedRef.current) return;
+    
+    const img = new Image();
+    img.src = wallpaper.imageUrl;
+    
+    // Add cache control headers
+    const controller = new AbortController();
+    fetch(wallpaper.imageUrl, {
+      signal: controller.signal,
+      cache: 'force-cache', // Force browser to use cached version if available
+      headers: {
+        'Cache-Control': 'max-age=31536000', // Cache for 1 year
+      }
+    }).catch(() => {}); // Ignore fetch errors, this is just for caching
+    
+    img.onload = () => {
+      if (isPriority || imageRef.current?.complete) {
+        setImageLoading(false);
+        hasLoadedRef.current = true;
+        if (onImageLoad) onImageLoad();
+      }
+    };
+    
+    return () => controller.abort();
+  }, [wallpaper.imageUrl, isPriority, onImageLoad]);
   
   const handleDownload = (e) => {
-    // Prevent default behavior (opening in new tab)
     e.preventDefault();
-    
-    // Use file-saver to handle the download
-    // This works better with cross-origin resources
     const fileName = `${wallpaper.title.replace(/\s+/g, '-').toLowerCase()}.jpg`;
     
-    // Fetch the image first to handle potential CORS issues
     fetch(wallpaper.downloadUrl)
       .then(response => response.blob())
       .then(blob => {
@@ -22,17 +48,16 @@ const WallpaperCard = ({ wallpaper, onImageLoad, isLoaded }) => {
       })
       .catch(error => {
         console.error('Download failed:', error);
-        // Fallback to direct download if fetch fails
         saveAs(wallpaper.downloadUrl, fileName);
       });
   };
   
   const handleImageLoad = () => {
     setImageLoading(false);
+    hasLoadedRef.current = true;
     if (onImageLoad) onImageLoad();
   };
 
-  // Create detailed alt text for better SEO
   const altText = `${wallpaper.title} - ${wallpaper.category} car wallpaper in high resolution`;
 
   return (
@@ -48,11 +73,14 @@ const WallpaperCard = ({ wallpaper, onImageLoad, isLoaded }) => {
           </div>
         )}
         <img 
+          ref={imageRef}
           src={wallpaper.imageUrl} 
           alt={altText} 
           className={`wallpaper-image ${imageLoading ? 'loading' : 'loaded'}`} 
-          loading="lazy"
+          loading={isPriority ? 'eager' : 'lazy'}
           onLoad={handleImageLoad}
+          fetchpriority={isPriority ? 'high' : 'auto'}
+          decoding={isPriority ? 'sync' : 'async'}
         />
       </div>
       <div className="wallpaper-details">

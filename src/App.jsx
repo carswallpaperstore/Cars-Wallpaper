@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Header from './components/Header';
 import Filter from './components/Filter';
 import WallpaperGrid from './components/WallpaperGrid';
@@ -10,6 +10,23 @@ import './App.css';
 function App() {
   const [activeCategory, setActiveCategory] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
+
+  // Preload critical images as soon as the app loads
+  useEffect(() => {
+    // Preload the first 3 images immediately
+    const preloadTopImages = () => {
+      wallpapers.slice(0, 3).forEach(wallpaper => {
+        const link = document.createElement('link');
+        link.rel = 'preload';
+        link.as = 'image';
+        link.href = wallpaper.imageUrl;
+        link.fetchpriority = 'high';
+        document.head.appendChild(link);
+      });
+    };
+    
+    preloadTopImages();
+  }, []);
 
   return (
     <div className="app">

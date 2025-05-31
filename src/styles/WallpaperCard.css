@@ -1,3 +1,5 @@
+/* Add these optimized styles at the top of your CSS file */
+
 .wallpaper-card {
   background-color: #fff;
   border-radius: 12px;
@@ -9,6 +11,7 @@
   display: flex;
   flex-direction: column;
   width: 100%;
+  will-change: transform; /* Optimize for GPU acceleration */
 }
 
 .wallpaper-card:hover {
@@ -21,7 +24,8 @@
   width: 100%;
   padding-top: 65%; /* Slightly taller aspect ratio */
   overflow: hidden;
-  background-color: #f0f0f0;
+  background-color: #e0e0e0; /* Slightly darker background for better contrast */
+  contain: strict; /* Improve performance */
 }
 
 .wallpaper-image {
@@ -31,7 +35,14 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.5s ease, opacity 0.3s ease;
+  transition: transform 0.5s ease, opacity 0.15s ease; /* Faster opacity transition */
+  will-change: opacity; /* Optimize for GPU acceleration */
+  backface-visibility: hidden; /* Prevent flickering */
+  transform: translateZ(0); /* Force GPU acceleration */
+}
+
+.wallpaper-card:hover .wallpaper-image {
+  transform: scale(1.05);
 }
 
 .wallpaper-image.loading {
@@ -49,10 +60,6 @@
   width: 100%;
   height: 100%;
   z-index: 1;
-}
-
-.wallpaper-card:hover .wallpaper-image {
-  transform: scale(1.05);
 }
 
 .wallpaper-details {
@@ -111,11 +118,6 @@
   width: 1rem;
   height: 1rem;
   stroke: currentColor;
-}
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: 500;
-  transition: background-color 0.3s ease;
 }
 
 .download-button:hover {

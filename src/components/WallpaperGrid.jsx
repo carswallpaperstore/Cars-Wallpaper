@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import WallpaperCard from './WallpaperCard';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
@@ -8,44 +8,55 @@ const WallpaperGrid = ({ wallpapers, activeCategory, searchTerm }) => {
   const [loading, setLoading] = useState(true);
   const [filteredWallpapers, setFilteredWallpapers] = useState([]);
   const [loadedImages, setLoadedImages] = useState({});
+  const initialLoadDone = useRef(false);
+
+  // Preload first few images immediately when component mounts
+  useEffect(() => {
+    if (!initialLoadDone.current) {
+      // Preload first 6 images
+      wallpapers.slice(0, 6).forEach(wallpaper => {
+        const img = new Image();
+        img.src = wallpaper.imageUrl;
+        img.fetchPriority = 'high';
+      });
+      initialLoadDone.current = true;
+    }
+  }, [wallpapers]);
 
   useEffect(() => {
-    // Reset loaded images when filters change
-    setLoadedImages({});
-    
     // Apply filtering based on category and search term
     setLoading(true);
     
-    const timer = setTimeout(() => {
-      let filtered = wallpapers;
-      
-      // Filter by category
-      if (activeCategory !== 'all') {
-        filtered = filtered.filter(wallpaper => wallpaper.category === activeCategory);
-      }
-      
-      // Filter by search term
-      if (searchTerm.trim() !== '') {
-        const searchLower = searchTerm.toLowerCase().trim();
-        filtered = filtered.filter(wallpaper => 
-          wallpaper.title.toLowerCase().includes(searchLower) ||
-          wallpaper.category.toLowerCase().includes(searchLower)
-        );
-      }
-      
-      setFilteredWallpapers(filtered);
-      setLoading(false);
-    }, 300);
+    // Immediate filtering for better UX
+    let filtered = wallpapers;
     
-    return () => clearTimeout(timer);
+    // Filter by category
+    if (activeCategory !== 'all') {
+      filtered = filtered.filter(wallpaper => wallpaper.category === activeCategory);
+    }
+    
+    // Filter by search term
+    if (searchTerm.trim() !== '') {
+      const searchLower = searchTerm.toLowerCase().trim();
+      filtered = filtered.filter(wallpaper => 
+        wallpaper.title.toLowerCase().includes(searchLower) ||
+        wallpaper.category.toLowerCase().includes(searchLower)
+      );
+    }
+    
+    setFilteredWallpapers(filtered);
+    setLoading(false);
   }, [wallpapers, activeCategory, searchTerm]);
 
-  // Handle image load event
+  // Handle image load event - persist loaded state
   const handleImageLoaded = (id) => {
-    setLoadedImages(prev => ({
-      ...prev,
-      [id]: true
-    }));
+    setLoadedImages(prev => {
+      if (prev[id]) return prev; // Skip if already loaded
+      return {
+        ...prev,
+        [id]: true
+      };
+    });
   };
 
   // Skeleton loader component
@@ -65,7 +76,7 @@ const WallpaperGrid = ({ wallpapers, activeCategory, searchTerm }) => {
     <div className="wallpaper-grid-container">
       {loading ? (
         <div className="wallpaper-grid">
-          {Array(12).fill(0).map((_, index) => (
+          {Array(6).fill(0).map((_, index) => (
             <WallpaperSkeleton key={index} />
           ))}
         </div>
@@ -78,12 +89,13 @@ const WallpaperGrid = ({ wallpapers, activeCategory, searchTerm }) => {
             </div>
           ) : (
             <div className="wallpaper-grid">
-              {filteredWallpapers.map(wallpaper => (
+              {filteredWallpapers.map((wallpaper, index) => (
                 <WallpaperCard 
                   key={wallpaper.id} 
                   wallpaper={wallpaper} 
                   onImageLoad={() => handleImageLoaded(wallpaper.id)}
                   isLoaded={!!loadedImages[wallpaper.id]}
+                  isPriority={index < 6} // Prioritize first 6 images
                 />
               ))}
             </div>

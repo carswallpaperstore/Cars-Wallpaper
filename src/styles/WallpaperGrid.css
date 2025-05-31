@@ -1,3 +1,5 @@
+/* Add this to your existing CSS */
+
 .wallpaper-grid-container {
   max-width: 1200px;
   margin: 0 auto;
@@ -41,6 +43,8 @@
   overflow: hidden;
 }
 
+
+
 /* Animation for skeleton loading */
 @keyframes shimmer {
   0% {
@@ -61,6 +65,38 @@
 .wallpaper-card.loading {
   opacity: 0.9;
 }
+
+/* Add these styles at the top of your existing CSS file */
+
+/* Optimize image loading transition */
+.wallpaper-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease, opacity 0.2s ease; /* Faster opacity transition */
+}
+
+.wallpaper-image.loading {
+  opacity: 0;
+}
+
+.wallpaper-image.loaded {
+  opacity: 1;
+}
+
+/* Add a subtle background color that matches your images while loading */
+.wallpaper-image-container {
+  position: relative;
+  width: 100%;
+  padding-top: 65%;
+  overflow: hidden;
+  background-color: #e0e0e0; /* Slightly darker background for better contrast */
+}
+
+/* Keep the rest of your existing CSS */
 
 @media (max-width: 1024px) {
   .wallpaper-grid {
