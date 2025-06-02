@@ -2,10 +2,10 @@
 export const wallpapers = [
   {
     id: 1,
-    title: 'Red Ford Mustang',
-    category: 'classic',
-    imageUrl: 'https://zdvvqjwqiyndrabtnbec.supabase.co/storage/v1/object/public/car-wallpapers/Supercars/red-ford-mustang.jpg',
-    downloadUrl: 'https://zdvvqjwqiyndrabtnbec.supabase.co/storage/v1/object/public/car-wallpapers/Supercars/red-ford-mustang.jpg' 
+    title: 'Black Super Car',
+    category: 'sports',
+    imageUrl: 'https://zdvvqjwqiyndrabtnbec.supabase.co/storage/v1/object/public/car-wallpapers/Supercars/SuperCar.png',
+    downloadUrl: 'https://zdvvqjwqiyndrabtnbec.supabase.co/storage/v1/object/public/car-wallpapers/Supercars/SuperCar.png' 
  },
  {
     id: 2,
